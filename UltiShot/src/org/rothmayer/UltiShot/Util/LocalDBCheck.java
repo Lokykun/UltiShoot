@@ -9,8 +9,7 @@ import org.avaje.datasource.DataSourceConfig;
 import org.rothmayer.UltiShot.Check.StartupCheck;
 import org.rothmayer.UltiShot.DB.Local.Zuweisung;
 import org.rothmayer.UltiShot.DB.Local.ZuweisungPK;
-import org.rothmayer.UltiShot.GUI.UltiShotAuswerung;
-
+import org.rothmayer.UltiShot.GUI.UltiShot;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
@@ -80,7 +79,7 @@ public class LocalDBCheck implements StartupCheck
 			return true;
 		} catch (Exception e) {
 			exp = e;
-			UltiShotAuswerung.logger.error("", e);
+			UltiShot.logger.error("", e);
 			return false;
 		}
 	}

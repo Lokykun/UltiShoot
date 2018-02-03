@@ -8,7 +8,7 @@ import org.rothmayer.UltiShot.DB.SMBD.Schuetze;
 import org.rothmayer.UltiShot.DB.SMBD.Starterliste;
 import org.rothmayer.UltiShot.DB.SMBD.Starterlisten;
 import org.rothmayer.UltiShot.DB.SMBD.StarterlistePK;
-import org.rothmayer.UltiShot.GUI.UltiShotAuswerung;
+import org.rothmayer.UltiShot.GUI.UltiShot;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
@@ -68,7 +68,7 @@ public class SMDBCheck implements StartupCheck
 			return true;
 		} catch (Exception e) {
 			exp = e;
-			UltiShotAuswerung.logger.error("", e);
+			UltiShot.logger.error("", e);
 			return false;
 		}
 	}

@@ -7,7 +7,7 @@ import org.rothmayer.UltiShot.DB.SSMBD2.Serien;
 import org.rothmayer.UltiShot.DB.SSMBD2.SerienPK;
 import org.rothmayer.UltiShot.DB.SSMBD2.Treffer;
 import org.rothmayer.UltiShot.DB.SSMBD2.TrefferPK;
-import org.rothmayer.UltiShot.GUI.UltiShotAuswerung;
+import org.rothmayer.UltiShot.GUI.UltiShot;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
@@ -64,7 +64,7 @@ public class SSMDB2Check implements StartupCheck
 			return true;
 		} catch (Exception e) {
 			exp = e;
-			UltiShotAuswerung.logger.error("", e);
+			UltiShot.logger.error("", e);
 			return false;
 		}
 	}

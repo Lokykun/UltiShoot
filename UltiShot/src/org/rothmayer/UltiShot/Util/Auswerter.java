@@ -10,7 +10,7 @@ import org.rothmayer.UltiShot.DB.Local.Zuweisung;
 import org.rothmayer.UltiShot.DB.SMBD.Mannschaft;
 import org.rothmayer.UltiShot.DB.SMBD.Schuetze;
 import org.rothmayer.UltiShot.DB.SSMBD2.Scheiben;
-import org.rothmayer.UltiShot.GUI.UltiShotAuswerung;
+import org.rothmayer.UltiShot.GUI.UltiShot;
 
 public class Auswerter {
 
@@ -23,7 +23,7 @@ public class Auswerter {
 	
 	public void doAuswertung(int listenID, List<Integer> scheibenIDs, int gr, int profi){
 		teams = new ArrayList<>();
-		List<Scheiben> tempList = UltiShotAuswerung.ssmdb2.find(Scheiben.class).where().eq("starterlistenID", listenID).findList();
+		List<Scheiben> tempList = UltiShot.ssmdb2.find(Scheiben.class).where().eq("starterlistenID", listenID).findList();
 		//System.out.println(tempList.size());
 		List<Scheiben> scheibenList = new ArrayList<>();
 		
@@ -36,8 +36,8 @@ public class Auswerter {
 		Collections.sort(scheibenList);
 		
 		
-		List<Mannschaft> mannschaften = UltiShotAuswerung.smdb.find(Mannschaft.class).findList();
-		List<Zuweisung> zuweisungen = UltiShotAuswerung.localDB.find(Zuweisung.class).where().eq("starterlistenid", listenID).findList();
+		List<Mannschaft> mannschaften = UltiShot.smdb.find(Mannschaft.class).findList();
+		List<Zuweisung> zuweisungen = UltiShot.localDB.find(Zuweisung.class).where().eq("starterlistenid", listenID).findList();
 		Collections.sort(zuweisungen); 
 		
 		
@@ -142,7 +142,7 @@ public class Auswerter {
 			//System.out.println(team.getName() + "\t" + akScheibe.getVorname() +" " + akScheibe.getNachname() + "\t" + akScheibe.getTotalRing());
 			Date date = new Date(System.currentTimeMillis());
 			try {
-				date = ((Schuetze) UltiShotAuswerung.smdb.find(Schuetze.class).where().eq("SportpassID", akScheibe.getSportpassID()).findUnique()).getGeburtsdatum();
+				date = ((Schuetze) UltiShot.smdb.find(Schuetze.class).where().eq("SportpassID", akScheibe.getSportpassID()).findUnique()).getGeburtsdatum();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

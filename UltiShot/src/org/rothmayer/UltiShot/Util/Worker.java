@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.TimerTask;
 
 import org.rothmayer.UltiShot.DB.SMBD.Starterlisten;
-import org.rothmayer.UltiShot.GUI.ConfigMainWindow;
+import org.rothmayer.UltiShot.GUI.TargetAssignmentWindow;
 
 public class Worker extends TimerTask{
 	
-	ConfigMainWindow window;
+	TargetAssignmentWindow window;
 
 	@Override
 	public void run() {
@@ -26,7 +26,7 @@ public class Worker extends TimerTask{
 		
 	}
 
-	public Worker(ConfigMainWindow window) {
+	public Worker(TargetAssignmentWindow window) {
 		this.window = window;
 		
 		window.getList().setEnabled(false);
