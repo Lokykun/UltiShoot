@@ -31,7 +31,7 @@ public class USProgressbar extends JProgressBar{
 		this.lengthPerTick = (float) this.getWidth() / (float) this.tick;
 
 		this.setBackground(Color.DARK_GRAY);
-		this.setForeground(Color.GREEN);
+		this.setForeground(Color.ORANGE);
 		this.setMinimumSize(new Dimension(this.getWidth(), 30));
 		this.setPreferredSize(new Dimension(this.getWidth(), 30));
 	}
@@ -43,7 +43,7 @@ public class USProgressbar extends JProgressBar{
 		this.message = "";
         this.lengthPerTick = (float) this.getMaximum()/ (float) this.tick;
 		this.setBackground(Color.DARK_GRAY);
-		this.setForeground(Color.GREEN);
+		this.setForeground(Color.ORANGE);
 		this.setMinimumSize(new Dimension(this.getWidth(), 30));
 		this.setPreferredSize(new Dimension(this.getWidth(), 30));
 	}
@@ -55,7 +55,7 @@ public class USProgressbar extends JProgressBar{
 		this.message = "";
         this.lengthPerTick = (float) this.getMaximum()/ (float) this.tick;
 		this.setBackground(Color.DARK_GRAY);
-		this.setForeground(Color.GREEN);
+		this.setForeground(Color.ORANGE);
 		this.setMinimumSize(new Dimension(this.getWidth(), 30));
 		this.setPreferredSize(new Dimension(this.getWidth(), 30));
 	}
@@ -99,10 +99,10 @@ public class USProgressbar extends JProgressBar{
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0, 0, getWidth(), this.getHeight());
         
-        g.setColor(Color.GREEN);
+        g.setColor(Color.ORANGE);
         g.drawString(message, this.getWidth()/2 - width/2 ,this.getHeight()/2 + height/2-2);
         
-        g.setColor(Color.GREEN);
+        g.setColor(Color.ORANGE);
         g.fillRect(0, 0, currentLength, this.getHeight());
         g.setColor(Color.DARK_GRAY);
         g.setClip(0, 0, currentLength, this.getHeight());

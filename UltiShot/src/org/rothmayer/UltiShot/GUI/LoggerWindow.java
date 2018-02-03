@@ -7,45 +7,22 @@ import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
-public class LoggerWindow {
+public class LoggerWindow extends JFrame{
 
-	private JFrame frmUltishotLog;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoggerWindow window = new LoggerWindow();
-					window.frmUltishotLog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
-	 * Create the application.
+	 * 
 	 */
+	private static final long serialVersionUID = -9214906259231094192L;
+
 	public LoggerWindow() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frmUltishotLog = new JFrame();
-		frmUltishotLog.setTitle("UltiShot Log");
-		frmUltishotLog.setIconImage(Toolkit.getDefaultToolkit().getImage(LoggerWindow.class.getResource("/images/logo250.png")));
-		frmUltishotLog.setBounds(100, 100, 450, 300);
-		frmUltishotLog.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setTitle("UltiShot Log");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(LoggerWindow.class.getResource("/images/logo250.png")));
+		setBounds(100, 100, 450, 300);
 		
 		JTextArea textLogger = new JTextArea();
-		frmUltishotLog.getContentPane().add(textLogger, BorderLayout.CENTER);
+		getContentPane().add(textLogger, BorderLayout.CENTER);
 	}
 
 }

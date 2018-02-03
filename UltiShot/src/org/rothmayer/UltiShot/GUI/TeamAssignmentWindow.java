@@ -110,8 +110,8 @@ public class TeamAssignmentWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public TeamAssignmentWindow() {
-		setTitle("UltiShot");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(TeamAssignmentWindow.class.getResource("/images/logo250.png")));
+		setTitle("UltiShot Mannschaftszuordnung");
 		setBounds(600, 800, 1200, 1000);
 		setMinimumSize(new Dimension(1100, 800));
 		contentPane = new JPanel();

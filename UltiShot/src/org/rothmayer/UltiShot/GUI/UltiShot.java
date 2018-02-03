@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
@@ -100,18 +102,22 @@ public class UltiShot {
 			public void windowOpened(WindowEvent e) {
 				compLoader();
 				splashFrame.setVisible(false);
-				TeamAssignmentWindow frame = new TeamAssignmentWindow();
+				MenuWindow frame = new MenuWindow();
 				frame.setVisible(true);
 			}
 		});
 		splashFrame.getContentPane().setBackground(Color.DARK_GRAY);
 		splashFrame.setUndecorated(true);
-		splashFrame.setBounds(100, 100, 450, 300);
+		splashFrame.setBounds(100, 100, 400, 430);
 		splashFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Screen Center
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		splashFrame.setLocation(dim.width/2-splashFrame.getSize().width/2, dim.height/2-splashFrame.getSize().height/2);
+		
+		ImageIcon II = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MenuWindow.class.getResource("/images/logo400.png")));
+		JLabel lblImage = new JLabel(II);
+		splashFrame.getContentPane().add(lblImage, BorderLayout.CENTER);
 		
 		//Initialize Progressbar
 		progressBar = new USProgressbar(checkList.size(), checkList.get(0).getMessage());

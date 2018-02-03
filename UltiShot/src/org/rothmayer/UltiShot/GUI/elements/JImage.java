@@ -4,10 +4,15 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class JImage extends JPanel{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5752878888690561794L;
 	private Image img;
 	
 	public JImage(Image img){

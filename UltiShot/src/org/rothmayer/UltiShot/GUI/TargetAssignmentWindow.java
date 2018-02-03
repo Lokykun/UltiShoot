@@ -62,8 +62,8 @@ public class TargetAssignmentWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public TargetAssignmentWindow() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(TargetAssignmentWindow.class.getResource("/images/logo250.png")));
 		setTitle("UltiShot Auswertung");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(600, 800, 482, 598);
 		setMinimumSize(new Dimension(500, 500));
 		contentPane = new JPanel();
