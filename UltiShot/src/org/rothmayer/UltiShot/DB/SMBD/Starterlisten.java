@@ -63,7 +63,8 @@ public class Starterlisten implements Serializable {
 	private String resultInfoText;
 	
 	@Column(name = "VeranstaltungsLogo", columnDefinition = "MEDIUMBLOB(16777215)")
-	private Blob veranstaltungsLogo;
+	@Lob
+	private byte[] veranstaltungsLogo;
 
 	public int getListenID() {
 		return listenID;
@@ -169,11 +170,11 @@ public class Starterlisten implements Serializable {
 		this.resultInfoText = resultInfoText;
 	}
 
-	public Blob getVeranstaltungsLogo() {
+	public byte[] getVeranstaltungsLogo() {
 		return veranstaltungsLogo;
 	}
 
-	public void setVeranstaltungsLogo(Blob veranstaltungsLogo) {
+	public void setVeranstaltungsLogo(byte[] veranstaltungsLogo) {
 		this.veranstaltungsLogo = veranstaltungsLogo;
 	}
 	

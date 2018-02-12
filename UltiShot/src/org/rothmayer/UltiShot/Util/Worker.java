@@ -22,7 +22,7 @@ public class Worker extends TimerTask{
 			scheibeIDs.add(sch.getDisziplinID());
 		}
 		
-		window.getAus().doAuswertung(starterlisten, scheibeIDs, window.getComboBoxMannschaft().getSelectedIndex()+1, window.getComboBoxProfi().getSelectedIndex()+1);
+		//window.getAus().doAuswertung(starterlisten, scheibeIDs, window.getComboBoxMannschaft().getSelectedIndex()+1, window.getComboBoxProfi().getSelectedIndex()+1);
 		
 	}
 

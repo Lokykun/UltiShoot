@@ -18,6 +18,7 @@ import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,12 +56,22 @@ public class UltiShot {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) { 
+		BasicConfigurator.configure();
 			try {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
-							UltiShot window = new UltiShot();
+							String osName = System.getProperty("os.name");
+							if((osName != null) && (osName.indexOf("Windows") != -1)){
+								//UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
+								UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+							}else{
+								UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+							}
+							
+
+							LoggerWindow logWindow = new LoggerWindow();
+							UltiShot window = new UltiShot(logWindow);
 							window.splashFrame.setVisible(true);
 							
 						} catch (Exception e) {
@@ -77,21 +88,26 @@ public class UltiShot {
 	/**
 	 * Create the application.
 	 */
-	public UltiShot() {
-		initialize();
+	public UltiShot(LoggerWindow logWindow) {
+		initialize(logWindow);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(LoggerWindow logWindow) {
+		//Create TEMP
+		File tmp = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator + "tmp" + File.separator);
+		if(!tmp.exists()){
+			tmp.mkdirs();
+		}
+		System.setProperty("java.io.tmpdir", tmp.getAbsolutePath());
 		//StartupCheck
 		//-Write
 		checkList.add(new CheckWritePermission());
 		//-Configload
 		//TODO load Config
 		//-SQL
-		System.out.println("-----------------");
 		checkList.add(new LocalDBCheck());
 		checkList.add(new SMDBCheck());
 		checkList.add(new SSMDB2Check());
@@ -102,7 +118,7 @@ public class UltiShot {
 			public void windowOpened(WindowEvent e) {
 				compLoader();
 				splashFrame.setVisible(false);
-				MenuWindow frame = new MenuWindow();
+				MenuWindow frame = new MenuWindow(logWindow);
 				frame.setVisible(true);
 			}
 		});

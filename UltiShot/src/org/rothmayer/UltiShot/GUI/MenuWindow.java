@@ -35,28 +35,30 @@ public class MenuWindow extends JFrame{
 	public TargetAssignmentWindow taWindow;
 	public TeamAssignmentWindow teWindow;
 	public LoggerWindow logWindow;
+	public JLabel lblStatus;
 
-	public MenuWindow() {
+	public MenuWindow(LoggerWindow logWindow) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				taWindow.dispatchEvent(new WindowEvent(taWindow, WindowEvent.WINDOW_CLOSING));
 				teWindow.dispatchEvent(new WindowEvent(teWindow, WindowEvent.WINDOW_CLOSING));
 				logWindow.dispatchEvent(new WindowEvent(logWindow, WindowEvent.WINDOW_CLOSING));
+
 			}
 		});
-		taWindow = new TargetAssignmentWindow();
+		taWindow = new TargetAssignmentWindow(this);
 		teWindow = new TeamAssignmentWindow();
-		logWindow = new LoggerWindow();
+		this.logWindow = logWindow;
 		setResizable(false);
 		setTitle("UltiShot Men\u00FC");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuWindow.class.getResource("/images/logo250.png")));
 		setBounds(100, 100, 250, 540);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel northPanel = new JPanel();
-		getContentPane().add(northPanel);
+		getContentPane().add(northPanel, BorderLayout.NORTH);
 		
 		Box verticalBox = Box.createVerticalBox();
 		verticalBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -69,9 +71,12 @@ public class MenuWindow extends JFrame{
 		verticalBox.add(lblImage);
 		
 		JLabel lblUltishorMen = new JLabel("UltiShot Men\u00FC");
+		lblUltishorMen.setPreferredSize(new Dimension(230, 50));
+		lblUltishorMen.setMinimumSize(new Dimension(230, 50));
+		lblUltishorMen.setMaximumSize(new Dimension(230, 50));
 		lblUltishorMen.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblUltishorMen.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUltishorMen.setFont(new Font("Tahoma", Font.PLAIN, 35));
+		lblUltishorMen.setFont(new Font("Segoe UI", Font.PLAIN, 35));
 		lblUltishorMen.setAlignmentX(Component.CENTER_ALIGNMENT);
 		verticalBox.add(lblUltishorMen);
 		GroupLayout gl_northPanel = new GroupLayout(northPanel);
@@ -88,7 +93,7 @@ public class MenuWindow extends JFrame{
 		northPanel.setLayout(gl_northPanel);
 		
 		JPanel centerPanel = new JPanel();
-		getContentPane().add(centerPanel);
+		getContentPane().add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		Box verticalBox_1 = Box.createVerticalBox();
@@ -96,14 +101,15 @@ public class MenuWindow extends JFrame{
 		centerPanel.add(verticalBox_1);
 		
 		JButton btnMannschaftsZuordnung = new JButton("Mannschaftszuordnung");
+		btnMannschaftsZuordnung.setPreferredSize(new Dimension(230, 29));
 		btnMannschaftsZuordnung.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				teWindow.setVisible(true);
 			}
 		});
-		btnMannschaftsZuordnung.setMaximumSize(new Dimension(250, 29));
-		btnMannschaftsZuordnung.setMinimumSize(new Dimension(250, 29));
+		btnMannschaftsZuordnung.setMaximumSize(new Dimension(230, 29));
+		btnMannschaftsZuordnung.setMinimumSize(new Dimension(230, 29));
 		verticalBox_1.add(btnMannschaftsZuordnung);
 		btnMannschaftsZuordnung.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
@@ -155,7 +161,7 @@ public class MenuWindow extends JFrame{
 		JPanel trailPanel = new JPanel();
 		trailPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		trailPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		getContentPane().add(trailPanel);
+		getContentPane().add(trailPanel, BorderLayout.SOUTH);
 		trailPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		JLabel lblStatusText = new JLabel("Status Auswerter: ");
@@ -163,7 +169,7 @@ public class MenuWindow extends JFrame{
 		lblStatusText.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		trailPanel.add(lblStatusText);
 		
-		JLabel lblStatus = new JLabel("gestoppt");
+		lblStatus = new JLabel("gestoppt");
 		trailPanel.add(lblStatus);
 		
 	}

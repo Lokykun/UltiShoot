@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.rothmayer.UltiShot.DB.Local.Zuweisung;
 import org.rothmayer.UltiShot.DB.SMBD.Mannschaft;
 import org.rothmayer.UltiShot.DB.SMBD.Schuetze;
+import org.rothmayer.UltiShot.DB.SMBD.Starterlisten;
 import org.rothmayer.UltiShot.DB.SSMBD2.Scheiben;
 import org.rothmayer.UltiShot.GUI.UltiShot;
 
@@ -21,7 +23,8 @@ public class Auswerter {
 	List<Team> teams = new ArrayList<>();
 	
 	
-	public void doAuswertung(int listenID, List<Integer> scheibenIDs, int gr, int profi){
+	public void doAuswertung(int listenID, List<Integer> scheibenIDs, int gr, int profi, String name, String path, List<StringComp> comp){
+		HashMap<Integer, ArrayList<Team>> map = new HashMap<Integer, ArrayList<Team>>();
 		teams = new ArrayList<>();
 		List<Scheiben> tempList = UltiShot.ssmdb2.find(Scheiben.class).where().eq("starterlistenID", listenID).findList();
 		//System.out.println(tempList.size());
@@ -39,8 +42,13 @@ public class Auswerter {
 		List<Mannschaft> mannschaften = UltiShot.smdb.find(Mannschaft.class).findList();
 		List<Zuweisung> zuweisungen = UltiShot.localDB.find(Zuweisung.class).where().eq("starterlistenid", listenID).findList();
 		Collections.sort(zuweisungen); 
+		/**System.out.println("1" + comp);
 		
-		
+		for(Integer id : map.keySet()){
+				teams.add(new Team(id, gr, profi, map.get(id)));
+			
+		}
+		UltiShot.logger.debug(comp.getTitle() + " " + map.size());**/
 		for(Mannschaft manns : mannschaften){
 			//Ausnahme für Schützenjugend
 			if(manns.getMannschaftsName().equalsIgnoreCase("Schützenjugend")){
@@ -49,6 +57,11 @@ public class Auswerter {
 
 				teams.add(new Team(manns.getMannschaftsID(), gr, profi, manns.getMannschaftsName()));
 			}
+			/**System.out.println(manns.getMannschaftsName());
+			if(comp.compString(manns.getMannschaftsName())){
+				System.out.println(manns.getMannschaftsName());
+				teams.add(new Team(manns.getMannschaftsID(), gr, profi, manns.getMannschaftsName()));
+			}**/
 		}
 		
 		
@@ -56,9 +69,9 @@ public class Auswerter {
 		HashMap<Integer,Integer> currentScheiben = new HashMap<>();
 		
 		for(Scheiben scheibe : scheibenList){
-			if(listname == null && scheibe.getStarterliste() != null){
+			//if(listname == null && scheibe.getStarterliste() != null){
 				listname = scheibe.getStarterliste();
-			}
+			//}
 			if(!maxScheibe.containsKey(scheibe.getSportpassID())){
 				maxScheibe.put(scheibe.getSportpassID(), 1);
 				currentScheiben.put(scheibe.getSportpassID(), 0);
@@ -75,7 +88,7 @@ public class Auswerter {
 		Scheiben akScheibe = null;
 		for(Zuweisung zuweisung : zuweisungen){
 			
-			//System.out.println(zuweisung.getZuweisungPK().getSportpassID() + "\t" + zuweisung.getZuweisungPK().getMannschaftsID() + "\t" + zuweisung.getReihenfolge());
+			System.out.println(zuweisung.getZuweisungPK().getSportpassID() + "\t" + zuweisung.getZuweisungPK().getMannschaftsID() + "\t" + zuweisung.getReihenfolge());
 			
 			//Teams erstellen
 			Team team = null;
@@ -169,11 +182,38 @@ public class Auswerter {
 		Collections.sort(teams);
 		//System.out.println(System.getProperty( "user.home" ));
 		
+		
+		
+		
 		if(listname == null){
 			listname = "";
 		}
+		byte[] logo = ((Starterlisten)UltiShot.smdb.find(Starterlisten.class).where().eq("ListenID", listenID).findUnique()).getVeranstaltungsLogo();
 		
-		new HtmlWorker(teams, listname, gr);
+
+		
+		
+		for(Team team : teams){
+			int in = 0;
+			for(StringComp co : comp){
+				if(co.compString(team.name)){
+					if(!map.containsKey(in)){
+						map.put(in, new ArrayList<>());
+					}
+					map.get(in).add(team);
+					break;
+					
+				}
+				in++;
+				
+			}
+		}
+		int ind = 0;
+		for(ArrayList<Team> t2 : map.values()){
+			new HtmlWorker(t2, listname, gr, name, path, logo, comp.get(ind).getTitle());
+			ind++;
+		}
+		
 		//DEBUG
 		/*
 		for(Team team : teams){

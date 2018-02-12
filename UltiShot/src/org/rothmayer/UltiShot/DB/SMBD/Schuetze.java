@@ -65,7 +65,8 @@ public class Schuetze implements Serializable, Comparable<Schuetze>{
 	private int schuetzenFlags;
 	
 	@Column(name = "SchuetzenFoto", columnDefinition = "MEDIUMBLOB(16777215)")
-	private Blob schuetzenFoto;
+	@Lob
+	private byte[] schuetzenFoto;
 
 	public int getSportpassID() {
 		return sportpassID;
@@ -171,11 +172,11 @@ public class Schuetze implements Serializable, Comparable<Schuetze>{
 		this.schuetzenFlags = schuetzenFlags;
 	}
 
-	public Blob getSchuetzenFoto() {
+	public byte[] getSchuetzenFoto() {
 		return schuetzenFoto;
 	}
 
-	public void setSchuetzenFoto(Blob schuetzenFoto) {
+	public void setSchuetzenFoto(byte[] schuetzenFoto) {
 		this.schuetzenFoto = schuetzenFoto;
 	}
 

@@ -23,6 +23,7 @@ public class LocalDBCheck implements StartupCheck
     private static EbeanServer server;
     private Exception exp;
     private ServerConfig config;
+    File file = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"database"+ File.separator + "local.db");
     
     public LocalDBCheck()
     {
@@ -41,7 +42,7 @@ public class LocalDBCheck implements StartupCheck
 		//TODO URL User Passwortd dynamisch laden
 		local.setUsername("");  
 		local.setPassword("");
-		local.setUrl("jdbc:sqlite:" + System.getProperty( "user.home" ) + "\\local.db");  
+		local.setUrl("jdbc:sqlite:" + System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"database"+ File.separator + "local.db");  
 		local.setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE);
 		//smdb.setHeartbeatSql("select 1");  
 		
@@ -61,8 +62,15 @@ public class LocalDBCheck implements StartupCheck
 	@Override
 	public boolean performCheck() {
 		try {
-			File dbFile = new File(System.getProperty( "user.home" ) + "\\local.db");
+			File dir = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"database"+ File.separator);
+			File dbFile = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"database"+ File.separator + "local.db");
+			
+			if(!dir.exists()){
+				dir.mkdirs();
+			}
 	    	if(!dbFile.exists()){
+	    		
+	    		UltiShot.logger.info("Local Database not found. Create Local Database");
 	    		dbFile.createNewFile();
 	    		config.setDdlRun(true);
 	    		config.setDdlGenerate(true);
@@ -91,7 +99,7 @@ public class LocalDBCheck implements StartupCheck
 
 	@Override
 	public String getErrorMessage() {
-		return "Can't connect to database Local!";
+		return "Can't connect to database Local!\n" + file.getAbsolutePath();
 	}
 
 	public static EbeanServer getServer() {
