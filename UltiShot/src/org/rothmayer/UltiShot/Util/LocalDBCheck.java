@@ -99,7 +99,7 @@ public class LocalDBCheck implements StartupCheck
 
 	@Override
 	public String getErrorMessage() {
-		return "Can't connect to database Local!\n" + file.getAbsolutePath();
+		return "Can't connect to database Local!";
 	}
 
 	public static EbeanServer getServer() {
