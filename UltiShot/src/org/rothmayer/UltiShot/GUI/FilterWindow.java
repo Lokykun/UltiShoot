@@ -68,6 +68,8 @@ public class FilterWindow extends JFrame implements Serializable{
 	 * Create the frame.
 	 */
 	public FilterWindow() {
+		//setMinimumSize(new Dimension(700, 400));
+		//setMaximumSize(new Dimension(840, 600));
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FilterWindow.class.getResource("/images/logo250.png")));
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -93,20 +95,19 @@ public class FilterWindow extends JFrame implements Serializable{
 		horizontalStrut_1.setMinimumSize(new Dimension(100, 0));
 		horizontalBox.add(horizontalStrut_1);
 		
-		JLabel lblWieVileFilter = new JLabel("Wie vile Filter: ");
+		JLabel lblWieVileFilter = new JLabel("Wie viel Filter: ");
 		horizontalBox.add(lblWieVileFilter);
 		
 		comboBox = new JComboBox();
+		comboBox.setMaximumSize(new Dimension(70, 32767));
 		/**action = new FilterAction(this);
 		comboBox.addActionListener(action);**/
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Test");
 				changeFilter();
 			}
 		});
 		comboBox.setEditable(true);
-		comboBox.setMaximumSize(new Dimension(70, 32767));
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
 		horizontalBox.add(comboBox);
 		verticalBox = Box.createVerticalBox();
@@ -163,10 +164,8 @@ public class FilterWindow extends JFrame implements Serializable{
 	}
 	
 	public void addActionL(){
-		System.out.println("Test2");
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Test");
 				changeFilter();
 			}
 		});

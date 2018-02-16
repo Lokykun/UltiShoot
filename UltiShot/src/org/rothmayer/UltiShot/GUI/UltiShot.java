@@ -97,11 +97,11 @@ public class UltiShot {
 	 */
 	private void initialize(LoggerWindow logWindow) {
 		//Create TEMP
-		File tmp = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator + "tmp" + File.separator);
+		/**File tmp = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator + "tmp" + File.separator);
 		if(!tmp.exists()){
 			tmp.mkdirs();
 		}
-		System.setProperty("java.io.tmpdir", tmp.getAbsolutePath());
+		System.setProperty("java.io.tmpdir", tmp.getAbsolutePath());**/
 		//StartupCheck
 		//-Write
 		checkList.add(new CheckWritePermission());
@@ -113,6 +113,7 @@ public class UltiShot {
 		checkList.add(new SSMDB2Check());
 		
 		splashFrame = new JFrame();
+		splashFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(UltiShot.class.getResource("/images/logo250.png")));
 		splashFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {

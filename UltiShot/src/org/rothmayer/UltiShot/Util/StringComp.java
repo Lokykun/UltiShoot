@@ -29,18 +29,16 @@ public class StringComp extends JPanel{
 	 * @wbp.parser.constructor
 	 */
 	public StringComp(int index){
+		
 		this(index, false);
 		
 	}
 	
 	public StringComp(int index, boolean def) {
 		this.def = def;
-		setSize(new Dimension(800, 40));
-		setPreferredSize(new Dimension(800, 40));
+		setMaximumSize(new Dimension(32767, 40));
 		setBounds(new Rectangle(0, 0, 800, 40));
 		setBorder(new LineBorder(new Color(0, 0, 0)));
-		setMaximumSize(new Dimension(800, 40));
-		setMinimumSize(new Dimension(800, 40));
 		this.index = index;
 		
 		Box horizontalBox = Box.createHorizontalBox();
@@ -135,7 +133,7 @@ public class StringComp extends JPanel{
 		//System.out.println(te + " " + tf);
 		
 		if(def){
-			System.out.println("Def");
+			//System.out.println("Def");
 				return true;
 		}
 		

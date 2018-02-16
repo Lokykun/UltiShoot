@@ -76,7 +76,7 @@ public class MenuWindow extends JFrame{
 		lblUltishorMen.setMaximumSize(new Dimension(230, 50));
 		lblUltishorMen.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblUltishorMen.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUltishorMen.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+		lblUltishorMen.setFont(new Font("Segoe UI", Font.PLAIN, 30));
 		lblUltishorMen.setAlignmentX(Component.CENTER_ALIGNMENT);
 		verticalBox.add(lblUltishorMen);
 		GroupLayout gl_northPanel = new GroupLayout(northPanel);
@@ -134,12 +134,6 @@ public class MenuWindow extends JFrame{
 		verticalStrut_2.setMinimumSize(new Dimension(0, 5));
 		verticalStrut_2.setMaximumSize(new Dimension(32767, 5));
 		verticalBox_1.add(verticalStrut_2);
-		
-		JButton btnConfig = new JButton("Configuration");
-		btnConfig.setMinimumSize(new Dimension(250, 29));
-		btnConfig.setMaximumSize(new Dimension(250, 29));
-		btnConfig.setAlignmentX(0.5f);
-		verticalBox_1.add(btnConfig);
 		
 		Component verticalStrut_3 = Box.createVerticalStrut(20);
 		verticalStrut_3.setMinimumSize(new Dimension(0, 5));

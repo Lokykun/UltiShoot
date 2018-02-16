@@ -152,10 +152,14 @@ public class HtmlWorker {
 		text = text.replace("%date", "generiert am " + dd.format(dt) + " um " + dz.format(dt));
 		text = text.replace("%mel", meldungen + " Meldungen gesamt");
 		
-		File csvFile = new File("\\\\192.168.10.200\\html\\beteiligung.csv");
+		File csvFile = new File(htmlFile.getParentFile() + File.separator + "beteiligung.csv");
 		String csv = "";
 		for(String name : beteiligung.keySet()){
 			csv = csv + name +";" + beteiligung.get(name) + ";\r\n";
+		}
+		
+		if(!htmlFile.getParentFile().exists()){
+			htmlFile.getParentFile().mkdirs();
 		}
 		
 		

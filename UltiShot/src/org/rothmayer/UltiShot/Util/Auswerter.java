@@ -88,7 +88,7 @@ public class Auswerter {
 		Scheiben akScheibe = null;
 		for(Zuweisung zuweisung : zuweisungen){
 			
-			System.out.println(zuweisung.getZuweisungPK().getSportpassID() + "\t" + zuweisung.getZuweisungPK().getMannschaftsID() + "\t" + zuweisung.getReihenfolge());
+			//System.out.println(zuweisung.getZuweisungPK().getSportpassID() + "\t" + zuweisung.getZuweisungPK().getMannschaftsID() + "\t" + zuweisung.getReihenfolge());
 			
 			//Teams erstellen
 			Team team = null;

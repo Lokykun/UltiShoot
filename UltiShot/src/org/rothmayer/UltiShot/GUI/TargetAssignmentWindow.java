@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.JLabel;
 import java.awt.Component;
@@ -108,14 +109,15 @@ public class TargetAssignmentWindow extends JFrame {
 
 			}
 		});
+		textName = new JTextField();
 		fWindow = readFilter();
 		fWindow.setVisible(false);
 		setResizable(false);
 		this.mWindow = mWindow;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TargetAssignmentWindow.class.getResource("/images/logo250.png")));
 		setTitle("UltiShot Auswertung");
-		setBounds(600, 800, 660, 830);
-		setMinimumSize(new Dimension(660, 850));
+		setBounds(600, 800, 660, 600);
+		setMinimumSize(new Dimension(660, 600));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -134,6 +136,14 @@ public class TargetAssignmentWindow extends JFrame {
 		starterlistenBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				renewScheibe();
+				if(starterlistenBox.getSelectedItem() != null){
+					if(starterlistenBox.getSelectedItem() != null){
+						if(((Starterlisten)starterlistenBox.getSelectedItem()).getListenName() != null){
+							textName.setText(((Starterlisten)starterlistenBox.getSelectedItem()).getListenName());
+						}
+					}
+				}
+				
 			}
 		});
 		starterlistenBox.setPreferredSize(new Dimension(400, 25));
@@ -150,12 +160,12 @@ public class TargetAssignmentWindow extends JFrame {
 		JLabel lblManschaftsgr = new JLabel("Mannschaftgr\u00F6sse:");
 		
 		comboBoxMannschaft = new JComboBox();
-		comboBoxMannschaft.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
+		comboBoxMannschaft.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
 		
 		JLabel lblProfisch = new JLabel("Profisch\u00FCtzen:");
 		
 		comboBoxProfi = new JComboBox();
-		comboBoxProfi.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
+		comboBoxProfi.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
 		
 		
 		
@@ -172,6 +182,29 @@ public class TargetAssignmentWindow extends JFrame {
 						time = 5;
 						UltiShot.logger.warn("Timer value not a Integer set time to 5 min");
 					}
+					
+					if(textName.getText().equalsIgnoreCase("") || textName.getText() == null){
+						JOptionPane.showMessageDialog(null, "Bennenung darf nicht leer sein!", "Error", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+					
+					
+					if(!textName.getText().equalsIgnoreCase("") && textName.getText() == null){
+						JOptionPane.showMessageDialog(null, "Pfad darf nicht leer sein!", "Error", JOptionPane.WARNING_MESSAGE);
+										
+					}
+					File tmp = new File(textPath.getText());
+					
+					if(!tmp.exists()){
+						JOptionPane.showMessageDialog(null, "Pfad existiert nicht!", "Error", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+					
+					if(!tmp.canWrite()){
+						JOptionPane.showMessageDialog(null, "Keine Schreibrechte für den ausgewählten Pfad!", "Error", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+					
 					time = time *1000*60;
 					list.setEnabled(false);
 					starterlistenBox.setEnabled(false);
@@ -181,6 +214,7 @@ public class TargetAssignmentWindow extends JFrame {
 					mWindow.lblStatus.setText("l\u00E4uft");
 					progressBar.setMaximum(time);
 					progressBar.setValue(time);
+					
 					UltiShot.logger.info("Start Timer with " + time +"ms");
 					timer = new Timer(time/100, new ActionListener() {
 						
@@ -233,9 +267,13 @@ public class TargetAssignmentWindow extends JFrame {
 							
 							
 							
+							int man = comboBoxMannschaft.getSelectedIndex()+1;
+							int pro = comboBoxProfi.getSelectedIndex()+1;
 							
-							
-								aus.doAuswertung(starterlisten, scheibeIDs, comboBoxMannschaft.getSelectedIndex()+1, comboBoxProfi.getSelectedIndex()+1,textName.getText(),textPath.getText(), fWindow.getFilter2());
+							if(pro > man){
+								man = pro;
+							}
+								aus.doAuswertung(starterlisten, scheibeIDs, man, pro,textName.getText(),textPath.getText(), fWindow.getFilter2());
 							
 							//aus.doAuswertung(starterlisten, scheibeIDs, comboBoxMannschaft.getSelectedIndex()+1, comboBoxProfi.getSelectedIndex()+1,textName.getText(),textPath.getText());
 							//System.out.println(System.currentTimeMillis());
@@ -266,14 +304,14 @@ public class TargetAssignmentWindow extends JFrame {
 		
 		lblListenBennenung = new JLabel("Listen Bennenung");
 		
-		textName = new JTextField();
-		textName.setText("TestBen");
+		
+		textName.setText("Veranstaltung");
 		textName.setColumns(10);
 		
 		JLabel lblExportpfad = new JLabel("Exportpfad");
 		
 		textPath = new JTextField();
-		textPath.setText("C:\\Users\\Florian\\Documents\\Test");
+		textPath.setText(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"export" + File.separator);
 		textPath.setColumns(10);
 		
 		JButton btnPfadWhlen = new JButton("Pfad W\u00E4hlen");
@@ -361,7 +399,7 @@ public class TargetAssignmentWindow extends JFrame {
 							.addComponent(btnAuswertungStarten)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(progressBar, 0, 0, Short.MAX_VALUE)))
-					.addContainerGap(39, Short.MAX_VALUE))
+					.addContainerGap(42, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -376,7 +414,7 @@ public class TargetAssignmentWindow extends JFrame {
 						.addComponent(lblManschaftsgr))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(list, GroupLayout.PREFERRED_SIZE, 584, GroupLayout.PREFERRED_SIZE)
+						.addComponent(list, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addComponent(comboBoxMannschaft, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(21)
@@ -455,7 +493,7 @@ public class TargetAssignmentWindow extends JFrame {
 	private FilterWindow readFilter(){
 		ObjectInputStream objectinputstream = null;
 		File cfg = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"filter" + File.separator + "filter.cfg" );
-		File cfgdir = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot" + File.separator + "filter\\" );
+		File cfgdir = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot" + File.separator + "filter" );
 		if(!cfgdir.exists()){
 			if(!cfgdir.mkdirs()){
 				UltiShot.logger.error("Cant create Directory");
