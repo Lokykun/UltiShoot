@@ -135,11 +135,6 @@ public class MenuWindow extends JFrame{
 		verticalStrut_2.setMaximumSize(new Dimension(32767, 5));
 		verticalBox_1.add(verticalStrut_2);
 		
-		Component verticalStrut_3 = Box.createVerticalStrut(20);
-		verticalStrut_3.setMinimumSize(new Dimension(0, 5));
-		verticalStrut_3.setMaximumSize(new Dimension(32767, 5));
-		verticalBox_1.add(verticalStrut_3);
-		
 		JButton btnLog = new JButton("Log");
 		btnLog.addMouseListener(new MouseAdapter() {
 			@Override
