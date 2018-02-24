@@ -37,9 +37,9 @@ public class LoggerWindow extends JFrame{
 
 		
 		
-		PrintStream printStream = new PrintStream(new CustomOutputStream(textLogger));
-		System.setOut(printStream);
-		System.setErr(printStream);
+		//PrintStream printStream = new PrintStream(new CustomOutputStream(textLogger));
+		//System.setOut(printStream);
+		//System.setErr(printStream);
 		getContentPane().add(scroll, BorderLayout.CENTER);
 		
 	}

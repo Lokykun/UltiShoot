@@ -35,6 +35,7 @@ public class MenuWindow extends JFrame{
 	public TargetAssignmentWindow taWindow;
 	public TeamAssignmentWindow teWindow;
 	public LoggerWindow logWindow;
+	public FTPWindow ftpWindow;
 	public JLabel lblStatus;
 
 	public MenuWindow(LoggerWindow logWindow) {
@@ -49,6 +50,7 @@ public class MenuWindow extends JFrame{
 		});
 		taWindow = new TargetAssignmentWindow(this);
 		teWindow = new TeamAssignmentWindow();
+		ftpWindow = new FTPWindow();
 		this.logWindow = logWindow;
 		setResizable(false);
 		setTitle("UltiShot Men\u00FC");
@@ -146,6 +148,23 @@ public class MenuWindow extends JFrame{
 		btnLog.setMaximumSize(new Dimension(250, 29));
 		btnLog.setAlignmentX(0.5f);
 		verticalBox_1.add(btnLog);
+		
+		Component verticalStrut = Box.createVerticalStrut(20);
+		verticalStrut.setMinimumSize(new Dimension(0, 5));
+		verticalStrut.setMaximumSize(new Dimension(32767, 5));
+		verticalBox_1.add(verticalStrut);
+		
+		JButton btnFTP = new JButton("FTP Uploader");
+		btnFTP.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ftpWindow.setVisible(true);
+			}
+		});
+		btnFTP.setMinimumSize(new Dimension(250, 29));
+		btnFTP.setMaximumSize(new Dimension(250, 29));
+		btnFTP.setAlignmentX(0.5f);
+		verticalBox_1.add(btnFTP);
 		
 		JPanel trailPanel = new JPanel();
 		trailPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
