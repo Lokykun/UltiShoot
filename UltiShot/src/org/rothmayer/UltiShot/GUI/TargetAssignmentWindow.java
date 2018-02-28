@@ -496,7 +496,7 @@ public class TargetAssignmentWindow extends JFrame {
 		File cfgdir = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot" + File.separator + "filter" );
 		if(!cfgdir.exists()){
 			if(!cfgdir.mkdirs()){
-				UltiShot.logger.error("Cant create Directory");
+				UltiShot.logger.error("Create Directory Filter");
 				
 				return new FilterWindow();
 			}

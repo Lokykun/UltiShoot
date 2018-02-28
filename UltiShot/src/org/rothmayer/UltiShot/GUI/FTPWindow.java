@@ -4,16 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -32,6 +39,7 @@ import org.rothmayer.UltiShot.GUI.elements.FileTreePanel;
 import org.rothmayer.UltiShot.Util.ListEntry;
 import org.rothmayer.UltiShot.Util.ListEntryCellRenderer;
 import org.rothmayer.UltiShot.Util.USFTPFile;
+import org.rothmayer.UltiShot.Util.Watcher;
 
 import it.sauronsoftware.ftp4j.FTPAbortedException;
 import it.sauronsoftware.ftp4j.FTPClient;
@@ -44,6 +52,9 @@ import it.sauronsoftware.ftp4j.FTPListParseException;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.Component;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JSplitPane;
@@ -104,15 +115,21 @@ public class FTPWindow extends JFrame {
 	private WatchKey key;
 	private JButton btnConnect;
 	private JButton btnPfadWhlen;
+	private Watcher task;
+	private FTPWindow window;
+	private JButton btnberwachungStarten;
 	
 
 		/**
 	 * Create the frame.
 	 */
-	public FTPWindow() {
+	public FTPWindow(String adresse, String password, String user, int port, int sec, boolean passiv, String localPath) {
+			setTitle("FTP Uploader");
+			setIconImage(Toolkit.getDefaultToolkit().getImage(FTPWindow.class.getResource("/images/logo250.png")));
+		window = this;
 		history = new ArrayList<String>();
 		client = new FTPClient();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 664, 888);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -129,34 +146,16 @@ public class FTPWindow extends JFrame {
 		verticalBox_2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelSouth.add(verticalBox_2);
 		
-		JButton btnberwachungStarten = new JButton("\u00DCberwachung Starten");
+		btnberwachungStarten = new JButton("\u00DCberwachung Starten");
 		btnberwachungStarten.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(run){
-					if(key != null){
-						key.cancel();
-					}
-					run = false;
-					enableUI(true);
-					return;
-				}
+				
 				if(timer == null){
-					
-					
-					run = false;
 					//int time = ((int)spinnerTime.getValue())*1000;
 					final WatchService watchService;
 					Path dirToWatch = Paths.get(textLocalDir.getText());
-					try {
-						watchService = FileSystems.getDefault().newWatchService();
-						
-						dirToWatch.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-						
-					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(null,"Angegebener Localen Pfad kann nicht gelesen werden!");
-						return;
-					}
+					
 					if(textLocalDir.getText().equalsIgnoreCase("")){
 						JOptionPane.showMessageDialog(null,"Keinen Localen Pfad gewählt!");
 						return;
@@ -173,120 +172,24 @@ public class FTPWindow extends JFrame {
 					enableUI(false);
 					UltiShot.logger.info("Start Ordner Überwachung");
 					timer = new Timer();
-					TimerTask task = new TimerTask() {
-						
-						@Override
-						public void run() {
-							//System.out.println("1" + time);
-								
-								try {
-									run = true;
-									
-
-									while(run) {
-										// Obtaining watch keys
-										key = watchService.poll(1000, TimeUnit.MILLISECONDS);
-										if (!run) {
-							                break;
-							            }
-										if (key == null) {
-											continue;
-										}
-										// key value can be null if no event was triggered
-										List<WatchEvent<?>> eventList = key.pollEvents();
-										
-							            System.out.println("size = " + eventList.size());
-							            /**if(eventList.size() > 1){
-							            	break;
-							            }**/
-							            
-										FTPClient uClient = new FTPClient();
-										uClient.setSecurity(comboBox.getSelectedIndex());
-
-										uClient.setPassive(!chckbxPassivmodus.isSelected());
-
-										uClient.connect(textAdresse.getText(), Integer.parseInt(textPort.getText()));
-
-										uClient.login(textUsername.getText(), new String(pwdTest.getPassword()));
-
-										uClient.setAutoNoopTimeout(10000);
-										
-							            for(WatchEvent<?> ev : eventList)
-							            {
-							               System.out.print(ev.kind() + " -> ");
-							               Path name = (Path)ev.context();
-							               //System.out.print(name.getParent());
-							               // context liefert nur den Dateinamen, parent ist null !
-							               Path path = dirToWatch.resolve(name);
-							               System.out.print(path);
-							               
-							               if (Files.isDirectory(path))
-							                  System.out.println(" <dir>");
-							               else
-							                  System.out.println(" <file<");
-							               		
-							               		if(ev.kind() != StandardWatchEventKinds.ENTRY_DELETE){
-							               			File temp = new File(path.toString());
-								               		while(!temp.exists()&& !temp.canRead()){
-								               			Thread.sleep(1000);
-								               		}
-								               		uploadFile(uClient, textLocalDir.getText(), path.toString());
-							               			
-							               		}
-							            }
-							            
-							            boolean valid = key.reset();
-							            if (!valid && !run) {
-							                break;
-							            }
-							            System.out.println("Durch");
-										uClient.disconnect(true);
-									}
-									//watchService = null;
-									timer = null;
-									System.out.println("Fertig");
-									btnberwachungStarten.setText("\u00DCberwachung Starten");
-								} catch (NumberFormatException | IllegalStateException | IOException | FTPIllegalReplyException | FTPException | InterruptedException | FTPDataTransferException | FTPAbortedException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								
-							
-							
-						}
-						
-						public void uploadFile(FTPClient uClient, String root, String file) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException, FTPDataTransferException, FTPAbortedException{
-							String v1 = file.replace(root, "");
-							System.out.println(v1);
-							
-							String[] path = v1.split("\\");
-							String[] array = Arrays.copyOf(path, path.length-1);
-							uClient.changeDirectory("/");
-							
-							for(String str : array){
-								String t = str.replace("\\", "");
-								System.out.println(t);
-								
-								try {
-									uClient.changeDirectory(t);
-								} catch(FTPException e) {
-									uClient.createDirectory(t);
-									uClient.changeDirectory(t);
-								}
-								
-							}
-							System.out.println(new File(file).getAbsolutePath());
-							if(new File(file).isDirectory()){
-								return;
-							}
-							uClient.upload(new File(file));
-							
-						}
-						
-						
-				
-					};
+					try {
+						task = new Watcher(window, dirToWatch, comboBox.getSelectedIndex(), textAdresse.getText(), textUsername.getText(), new String(pwdTest.getPassword()), Integer.parseInt(textPort.getText()), !chckbxPassivmodus.isSelected());
+					} catch (NumberFormatException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					timer.schedule(task, 0);
+				}else{
+					task.setRun(false);
+					task.cancel();
+					timer.cancel();
+					task = null;
+					timer = null;
+					btnberwachungStarten.setText("\u00DCberwachung Starten");
+					enableUI(true);
 				}
 				
 				
@@ -734,7 +637,13 @@ public class FTPWindow extends JFrame {
 		Component verticalStrut_2 = Box.createVerticalStrut(20);
 		verticalBox.add(verticalStrut_2);
 		File test = new File(System.getProperty( "user.home" ));
-		
+		textLocalDir.setText(localPath);
+		textAdresse.setText(adresse);
+		textPort.setText("" +port);
+		textUsername.setText(user);
+		pwdTest.setText(password);
+		comboBox.setSelectedIndex(sec);
+		chckbxPassivmodus.setSelected(passiv);
 		
 	}
 	
@@ -746,6 +655,17 @@ public class FTPWindow extends JFrame {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode();
 		fillLocalNode(node, dir, newRoot);
 		return node;
+	}
+	
+	public void taskError(Exception e){
+		task.setRun(false);
+		task.cancel();
+		timer.cancel();
+		task = null;
+		timer = null;
+		btnberwachungStarten.setText("\u00DCberwachung Starten");
+		enableUI(true);
+		e.printStackTrace();
 	}
 	
 	public void fillLocalNode(DefaultMutableTreeNode node, File dir, boolean newRoot){
@@ -766,6 +686,19 @@ public class FTPWindow extends JFrame {
 			
 		}
 		
+	}
+	
+	public Map getValues(){
+		
+		Map map = new HashMap();
+		map.put("LocalAdresse", textLocalDir.getText());
+		map.put("Adresse", textAdresse.getText());
+		map.put("Port", Integer.parseInt(textPort.getText()));
+		map.put("User", textUsername.getText());
+		map.put("Pass", Base64.getEncoder().encodeToString((new String (pwdTest.getPassword())).getBytes()));
+		map.put("Passiv", chckbxPassivmodus.isSelected());
+		map.put("Sec", comboBox.getSelectedIndex());
+		return map;
 	}
 	
 	public void enableUI(boolean value){

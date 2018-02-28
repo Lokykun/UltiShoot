@@ -10,6 +10,11 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 import org.rothmayer.UltiShot.GUI.elements.JImage;
+
+import com.esotericsoftware.yamlbeans.YamlException;
+import com.esotericsoftware.yamlbeans.YamlReader;
+import com.esotericsoftware.yamlbeans.YamlWriter;
+
 import java.awt.Component;
 import javax.swing.Box;
 import java.awt.FlowLayout;
@@ -24,6 +29,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Map;
 
 public class MenuWindow extends JFrame{
 
@@ -45,12 +57,14 @@ public class MenuWindow extends JFrame{
 				taWindow.dispatchEvent(new WindowEvent(taWindow, WindowEvent.WINDOW_CLOSING));
 				teWindow.dispatchEvent(new WindowEvent(teWindow, WindowEvent.WINDOW_CLOSING));
 				logWindow.dispatchEvent(new WindowEvent(logWindow, WindowEvent.WINDOW_CLOSING));
+				writeFTPWindow(ftpWindow);
+				ftpWindow.dispatchEvent(new WindowEvent(ftpWindow, WindowEvent.WINDOW_CLOSING));
 
 			}
 		});
 		taWindow = new TargetAssignmentWindow(this);
 		teWindow = new TeamAssignmentWindow();
-		ftpWindow = new FTPWindow();
+		ftpWindow = getFTpWindow();
 		this.logWindow = logWindow;
 		setResizable(false);
 		setTitle("UltiShot Men\u00FC");
@@ -179,6 +193,62 @@ public class MenuWindow extends JFrame{
 		
 		lblStatus = new JLabel("gestoppt");
 		trailPanel.add(lblStatus);
+		
+	}
+	
+	public void writeFTPWindow(FTPWindow win){
+		File cfg = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"ftp" + File.separator + "ftp.cfg" );
+		File cfgdir = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot" + File.separator + "ftp" );
+		
+		if(!cfgdir.exists()){
+			if(!cfgdir.mkdirs()){
+				UltiShot.logger.error("Create Directory FTP");
+			}
+		}
+		
+		try {
+			
+			YamlWriter writer = new YamlWriter(new FileWriter(cfg));
+			writer.write(ftpWindow.getValues());
+
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			UltiShot.logger.error("Can not create FTP File");
+			e.printStackTrace();
+		}
+	}
+	
+	public FTPWindow getFTpWindow(){
+		File cfg = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot"+ File.separator +"ftp" + File.separator + "ftp.cfg" );
+		File cfgdir = new File(System.getProperty( "user.home" ) + File.separator + "UltiShot" + File.separator + "ftp" );
+		
+		if(!cfgdir.exists()){
+			if(!cfgdir.mkdirs()){
+				UltiShot.logger.error("Create Directory FTP");
+				return new FTPWindow("", "", "", 21, 1, false, System.getProperty( "user.home" ));
+			}
+		}
+		try {
+			YamlReader reader = new YamlReader(new FileReader(cfg));
+			Map<String, ?> map = (Map<String, ?>) reader.read();
+			String localAdresse = (String) map.get("LocalAdresse");
+			String adresse = (String) map.get("Adresse");
+			int port = Integer.parseInt((String) map.get("Port"));
+			String user = (String) map.get("User");
+			String password = new String(Base64.getDecoder().decode((String)map.get("Pass")));
+			boolean passiv = Boolean.parseBoolean((String) map.get("Passiv"));
+			int sec = Integer.parseInt((String) map.get("Sec"));
+			reader.close();
+			return new FTPWindow(adresse, password, user, port, sec, passiv, localAdresse);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			UltiShot.logger.error("FTP File not found");
+			return new FTPWindow("", "", "", 21, 0, false, System.getProperty( "user.home" ));
+		}
+		
+		
+		
 		
 	}
 }
