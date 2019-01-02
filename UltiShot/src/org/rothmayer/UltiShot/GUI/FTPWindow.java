@@ -130,7 +130,7 @@ public class FTPWindow extends JFrame {
 		history = new ArrayList<String>();
 		client = new FTPClient();
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setBounds(100, 100, 664, 888);
+		setBounds(100, 100, 664, 699);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -206,12 +206,6 @@ public class FTPWindow extends JFrame {
 		Box horizontalBox = Box.createHorizontalBox();
 		verticalBox_2.add(horizontalBox);
 		
-		JLabel lblStatusTitle = new JLabel("Status: ");
-		horizontalBox.add(lblStatusTitle);
-		
-		JLabel lblStatus = new JLabel("gestoppt");
-		horizontalBox.add(lblStatus);
-		
 		Box verticalBox = Box.createVerticalBox();
 		contentPane.add(verticalBox, BorderLayout.CENTER);
 		
@@ -219,8 +213,8 @@ public class FTPWindow extends JFrame {
 		verticalBox.add(verticalStrut);
 		
 		JPanel panelLocal = new JPanel();
-		panelLocal.setMinimumSize(new Dimension(10, 200));
-		panelLocal.setMaximumSize(new Dimension(32767, 400));
+		panelLocal.setMinimumSize(new Dimension(10, 150));
+		panelLocal.setMaximumSize(new Dimension(32767, 150));
 		panelLocal.setBorder(new LineBorder(new Color(0, 0, 0)));
 		verticalBox.add(panelLocal);
 		
